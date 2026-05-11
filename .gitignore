@@ -1,0 +1,5 @@
+.omc/
+.idea/
+.vscode/
+*.bak
+.DS_Store
