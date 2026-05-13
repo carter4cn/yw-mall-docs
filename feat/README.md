@@ -16,4 +16,4 @@
 
 | 文档 | 状态 | 触发动因 | 当前阶段 |
 |---|---|---|---|
-| [login-revamp.md](login-revamp.md) | 待启动 P0 | JWT 漂移 bug；多设备/撤销需求 | ⬜ |
+| [login-revamp.md](login-revamp.md) | P0 完成 (2026-05-14)，待启动 P1 | JWT 漂移 bug；多设备/撤销需求 | ✅ P0 |

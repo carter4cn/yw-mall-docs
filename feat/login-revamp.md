@@ -1,7 +1,7 @@
 # 登录体系改造方案 — Opaque Token + Redis Session
 
 **编写日期：** 2026-05-14
-**状态：** 待启动（已批准方向，等排期）
+**状态：** **P0 已完成 2026-05-14** — 真实账号 alice/alice123 浏览器登录通；e2e (login → access → refresh → logout → 401) 全部 ✅
 **关联文档：** `planning/mvp_sprint_plan.md`、`planning/q1q2_tracking.md`
 **触发动因：** S1-S3 期间发现 user-rpc 签发的 JWT 在 mall-api 验签失败，疑似 `onConfigChange` 中 `yaml.Unmarshal` 静默丢字段（与 daily 05-10 修过的 configcenter loader bug 同源），所有 e2e 必须手工 openssl 签 token 绕开。
 **决策：** 不修 JWT，整体替换为参考淘宝/京东的 **Opaque Token + Redis Session** 方案。
@@ -236,13 +236,13 @@ passport.yw-mall.com         主域，所有登录入口
 
 | Story | 工时 | 状态 | 完成日 | 备注 |
 |---|---|---|---|---|
-| L0.1 Session RPC × 5 | 2d | ⬜ | — | — |
-| L0.2 SessionMiddleware | 1d | ⬜ | — | — |
-| L0.3 `/api/auth/login` | 1d | ⬜ | — | — |
-| L0.4 refresh / logout | 0.5d | ⬜ | — | — |
-| L0.5 老端点兼容层 | 0.5d | ⬜ | — | — |
-| L0.6 前端 request.ts 拦截器 | 1d | ⬜ | — | 两个仓库 |
-| L0.7 e2e + 浏览器 smoke | 1d | ⬜ | — | — |
+| L0.1 Session RPC × 5 | 2d | ✅ | 2026-05-14 | CreateSession / ValidateSession / RefreshSession / DestroySession / DestroyAllUserSessions |
+| L0.2 SessionMiddleware | 1d | ✅ | 2026-05-14 | mall-api/internal/middleware/session_auth.go；替换 30 个 logic 的 uid 提取 |
+| L0.3 `/api/auth/login` | 1d | ✅ | 2026-05-14 | 返回 {accessToken, refreshToken, expiresIn, csrfToken} |
+| L0.4 refresh / logout | 0.5d | ✅ | 2026-05-14 | refresh 旋转；logout DEL session+refresh |
+| L0.5 老端点兼容层 | 0.5d | ✅ | 2026-05-14 | `/api/user/login` 内部调 CreateSession，返回新格式 |
+| L0.6 前端 request.ts 拦截器 | 1d | ✅ | 2026-05-14 | yw-mall-fe：401 自动 refresh 单飞 + X-CSRF-Token；admin-fe 暂未改（沿用 JWT，下一波 P0.5）|
+| L0.7 e2e + 浏览器 smoke | 1d | ✅ | 2026-05-14 | login/refresh/logout/401-after-logout 全通 |
 
 ### P1 跟踪表
 
