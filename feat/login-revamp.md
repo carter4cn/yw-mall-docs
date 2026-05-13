@@ -1,7 +1,7 @@
 # 登录体系改造方案 — Opaque Token + Redis Session
 
 **编写日期：** 2026-05-14
-**状态：** **P0 已完成 2026-05-14** — 真实账号 alice/alice123 浏览器登录通；e2e (login → access → refresh → logout → 401) 全部 ✅
+**状态：** **P0 + P0.5 已完成 2026-05-14** — C 端 alice/alice123 + 后台 admin/admin123 双端走真实账号；admin/merchant 跨角色 403 强制；refresh 旋转 + logout 失效全验证 ✅
 **关联文档：** `planning/mvp_sprint_plan.md`、`planning/q1q2_tracking.md`
 **触发动因：** S1-S3 期间发现 user-rpc 签发的 JWT 在 mall-api 验签失败，疑似 `onConfigChange` 中 `yaml.Unmarshal` 静默丢字段（与 daily 05-10 修过的 configcenter loader bug 同源），所有 e2e 必须手工 openssl 签 token 绕开。
 **决策：** 不修 JWT，整体替换为参考淘宝/京东的 **Opaque Token + Redis Session** 方案。
@@ -241,8 +241,25 @@ passport.yw-mall.com         主域，所有登录入口
 | L0.3 `/api/auth/login` | 1d | ✅ | 2026-05-14 | 返回 {accessToken, refreshToken, expiresIn, csrfToken} |
 | L0.4 refresh / logout | 0.5d | ✅ | 2026-05-14 | refresh 旋转；logout DEL session+refresh |
 | L0.5 老端点兼容层 | 0.5d | ✅ | 2026-05-14 | `/api/user/login` 内部调 CreateSession，返回新格式 |
-| L0.6 前端 request.ts 拦截器 | 1d | ✅ | 2026-05-14 | yw-mall-fe：401 自动 refresh 单飞 + X-CSRF-Token；admin-fe 暂未改（沿用 JWT，下一波 P0.5）|
+| L0.6 前端 request.ts 拦截器 | 1d | ✅ | 2026-05-14 | yw-mall-fe：401 自动 refresh 单飞 + X-CSRF-Token；admin-fe admin/ SPA 同步（P0.5 一并完成）|
 | L0.7 e2e + 浏览器 smoke | 1d | ✅ | 2026-05-14 | login/refresh/logout/401-after-logout 全通 |
+
+### P0.5 追加（admin-api 同步切换）
+
+> P0 收尾后立刻发现 yw-mall-admin 仍是 JWT，且 Claims 携带 `perms []string`（RBAC 需要），故扩展 session 加 `perms` 字段后一并切换。
+
+| Story | 工时 | 状态 | 完成日 | 备注 |
+|---|---|---|---|---|
+| L0.5a 扩展 SessionInfo+CreateSessionReq 加 perms | 0.5d | ✅ | 2026-05-14 | proto + sessionPayload + refreshPayload + createsession/validate/refresh logic |
+| L0.5b admin-api SessionAuthMiddleware（含 role gate） | 1d | ✅ | 2026-05-14 | rbac.go 改写：调 UserRpc.ValidateSession + role mismatch 403 |
+| L0.5c admin-api /admin/v1 + /merchant/v1 login/refresh/logout | 0.5d | ✅ | 2026-05-14 | auth_logic 改 CreateSession；新增 4 个 handler/logic 函数 |
+| L0.5d admin-fe `admin/` SPA 接入 | 0.5d | ✅ | 2026-05-14 | request.ts 401 单飞 refresh + setSession + logout |
+| L0.5e e2e + 跨角色 403 验证 | 0.5d | ✅ | 2026-05-14 | admin token 命中 /merchant/v1/* → 403 ✅ |
+
+**P0.5 遗留**：
+- `yw-mall-admin-fe/merchant/` SPA 还是占位（README 一行），后端 `/merchant/v1/refresh|logout` 已就位，待 merchant SPA scaffold 时直接接入即可。
+- `splitPerms` 现把 user-rpc 返回的 JSON 字符串 `["*"]` 当字符串切，permissions 字段输出 `["[\"*\"]"]`，**P0.5 前就有的小 bug**，不影响 RBAC 逻辑（admin role 默认放行），P1 顺手修。
+- yw-mall-admin 里 `config.Auth` 块 + `etc/admin.yaml` 的 Auth 配置 unused 但保留（避免 yaml 反序列化报错），后续 PR 清理。
 
 ### P1 跟踪表
 
