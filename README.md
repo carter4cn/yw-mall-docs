@@ -12,6 +12,7 @@ yw-mall 电商平台**唯一**的文档汇总仓库 — 产品需求、技术规
 yw-mall-docs/
 ├── prd/                  # 产品需求文档
 ├── planning/             # 路线图、Sprint 计划、差距分析
+├── feat/                 # 跨 sprint 特性方案 / 架构改造专题（含时间预算 + 跟踪表）
 ├── daily/                # 每日工作日志（按日期归档，跨 repo 合并）
 ├── architecture/         # 架构决策记录 (ADR) / 系统图 / 数据流图
 ├── api/                  # 统一 API 规范（OpenAPI / proto 参考）
@@ -32,6 +33,11 @@ yw-mall-docs/
 - [`planning/platform_completeness.md`](planning/platform_completeness.md) — 整个电商平台完整度评估（C 端 + B 端 + 平台 + 基础设施）
 - [`planning/commercial_readiness_gap.md`](planning/commercial_readiness_gap.md) — 后台专项商用差距分析（P3/P4/P5 路线图）
 - [`planning/mvp_sprint_plan.md`](planning/mvp_sprint_plan.md) — MVP 12-Sprint 详细计划（6 个月、8 人团队）
+- [`planning/q1q2_tracking.md`](planning/q1q2_tracking.md) — Sprint Story 跟踪表 + 角色甘特图
+
+### 特性方案
+
+- [`feat/login-revamp.md`](feat/login-revamp.md) — 登录体系改造（Opaque Token + Redis Session，参考淘宝/京东）— P0 / P1 / P2 / P3 时间预算 + 跟踪表
 
 ### 工作日志
 
