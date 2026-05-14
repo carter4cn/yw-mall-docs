@@ -39,6 +39,11 @@ yw-mall-docs/
 
 - [`feat/login-revamp.md`](feat/login-revamp.md) — 登录体系改造（Opaque Token + Redis Session，参考淘宝/京东）— P0 / P1 / P2 / P3 时间预算 + 跟踪表
 
+### 架构 / ADR
+
+- [`architecture/read-write-split-option-c-gtid.md`](architecture/read-write-split-option-c-gtid.md) — 读写分离方案 C：GTID 会话一致性（生产级正解）— 原理 / 7 人天预算 / 收益对比 A/B/C/D
+- [`architecture/replication-lag-idle-investigation.md`](architecture/replication-lag-idle-investigation.md) — Idle 系统下 ~1s 复制延迟根因调查（实测数据 + 拓扑分析 + 修复路径）
+
 ### 工作日志
 
 - [`daily/2026-05-10.md`](daily/2026-05-10.md) — etcd 配置中心修复 + rebuild.sh
