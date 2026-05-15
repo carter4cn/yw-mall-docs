@@ -17,3 +17,4 @@
 | 文档 | 状态 | 触发动因 | 当前阶段 |
 |---|---|---|---|
 | [login-revamp.md](login-revamp.md) | P0 + P0.5 完成 (2026-05-14)，待启动 P1 | JWT 漂移 bug；多设备/撤销需求；admin-api 同步切换 | ✅ P0+P0.5 |
+| [sprint-4-security-compliance.md](sprint-4-security-compliance.md) | 启动中 (2026-05-15) | MVP 上线前合规底线；外部资质 mock | 🟦 8 Story 进行中 |
