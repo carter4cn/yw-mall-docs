@@ -15,6 +15,7 @@ yw-mall-docs/
 ├── feat/                 # 跨 sprint 特性方案 / 架构改造专题（含时间预算 + 跟踪表）
 ├── daily/                # 每日工作日志（按日期归档，跨 repo 合并）
 ├── architecture/         # 架构决策记录 (ADR) / 系统图 / 数据流图
+├── bugs/                 # 按根因分类的 bug 案例库（避免同类问题重复犯）
 ├── api/                  # 统一 API 规范（OpenAPI / proto 参考）
 ├── runbooks/             # 运维手册 / 故障预案 / 上下线流程
 └── retrospectives/       # 项目复盘 / Sprint 回顾
@@ -43,6 +44,10 @@ yw-mall-docs/
 
 - [`architecture/read-write-split-option-c-gtid.md`](architecture/read-write-split-option-c-gtid.md) — 读写分离方案 C：GTID 会话一致性（生产级正解）— 原理 / 7 人天预算 / 收益对比 A/B/C/D
 - [`architecture/replication-lag-idle-investigation.md`](architecture/replication-lag-idle-investigation.md) — Idle 系统下 ~1s 复制延迟根因调查（实测数据 + 拓扑分析 + 修复路径）
+
+### Bug 分类记录
+
+- [`bugs/`](bugs/README.md) — 按根因类型归档（前后端契约 / 基础设施 / 数据库复制 / schema drift / placeholder）— 不按时间，看同类先例先翻这里
 
 ### 工作日志
 
